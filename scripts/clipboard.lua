@@ -2,7 +2,7 @@
 
 function play_from_clipboard()
     -- 获取剪切板内容
-    local handle = io.popen('xclip -selection clipboard -o')  -- 使用 xclip 从剪切板获取链接
+    local handle = io.popen('xclip -selection clipboard -o')
     local clipboard_content = handle:read('*a')
     handle:close()
 
@@ -11,16 +11,16 @@ function play_from_clipboard()
 
     -- 如果剪切板有内容
     if clipboard_content ~= "" then
-        -- 播放链接
-        mp.command('loadfile "' .. clipboard_content .. '"')
+        -- 设置 idle 模式，防止加载失败时 mpv 直接退出
+        mp.set_property("idle", "yes")
 
-        -- 监听播放停止事件
-        mp.register_event("stop", function()
-            -- 检查当前播放状态是否出错
-            local error = mp.get_property("error")
-            if error and error ~= "" then
-                -- 如果有错误，显示错误消息
-                mp.osd_message("无法播放此链接", 3)
+        -- 使用 commandv 安全传递参数（避免 URL 中的特殊字符导致问题）
+        mp.commandv("loadfile", clipboard_content)
+
+        -- 延迟检查是否加载成功
+        mp.add_timeout(0.5, function()
+            if mp.get_property_bool("idle-active") then
+                mp.osd_message("无法解析此链接: " .. clipboard_content, 5)
             end
         end)
     else
