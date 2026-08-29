@@ -2,7 +2,7 @@
 
 function play_from_clipboard()
     -- 获取剪切板内容
-    local handle = io.popen('xclip -selection clipboard -o')
+    local handle = io.popen('wl-paste --primary')
     local clipboard_content = handle:read('*a')
     handle:close()
 

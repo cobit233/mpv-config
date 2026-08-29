@@ -51,7 +51,7 @@ shaders/   -- 超分所需文件
 
 \| Ctrl + V | 	从系统剪切板获取链接并播放
 
-> 需要安装 xclip：sudo pacman -S xclip
+> 需要安装 wl-paste：sudo pacman -S wl-paste
 
 ## 常用 mpv 默认快捷键
 
