@@ -1,9 +1,9 @@
 local mp = require("mp")
 
 local chain = {
-    "~~/shaders/glsl/Deblur/Anime4K_Deblur_DoG.glsl",
-    "~~/shaders/glsl/Restore/Anime4K_Restore_CNN_L.glsl",
-    "~~/shaders/glsl/Upscale/Anime4K_Upscale_CNN_x2_L.glsl",
+    "~~/shaders/Anime4K/glsl/Deblur/Anime4K_Deblur_DoG.glsl",
+    "~~/shaders/Anime4K/glsl/Restore/Anime4K_Restore_CNN_L.glsl",
+    "~~/shaders/Anime4K/glsl/Upscale/Anime4K_Upscale_CNN_x2_L.glsl",
 }
 
 local function is_glass(path)

@@ -1,15 +1,15 @@
 [submodule "shaders"]
-	path = shaders
+	path = shaders/Anime4K
 	url = https://github.com/bloc97/Anime4K.git
 [submodule "modern-glass"]
-	path = modern-glass
+	path = ui/modern-glass
 	url = https://github.com/Demetter/ModernGlass.git
 	branch = main
 [submodule "menu-plugin"]
-	path = menu-plugin
+	path = ui/menu-plugin
 	url = https://github.com/mpvConfig/mpv-menu-plugin-next.git
 	branch = main
 [submodule "artcnn"]
-	path = artcnn
+	path = shaders/ArtCNN
 	url = https://github.com/Artoriuz/ArtCNN.git
 	branch = main

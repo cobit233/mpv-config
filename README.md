@@ -13,11 +13,13 @@
 input.conf -- 键盘绑定配置文件\
 mpv.conf   -- 主配置文件\
 rife.vpy   -- 插帧脚本文件，用于调用 RIFE 模型（GPU）进行插帧处理\
-modern-glass/ -- ModernGlass 子模块（液态玻璃界面和字体）\
-menu-plugin/ -- 右键菜单子模块（mpv-menu-plugin-next，LGPL-2.1）\
-shaders/   -- Anime4K 子模块\
-artcnn/    -- ArtCNN 子模块（可选超分，MIT）\
-fonts/     -- 链到 modern-glass/fonts 里的 Inter，不放授权文件\
+ui/       -- 界面\
+　　modern-glass/ -- ModernGlass 子模块（液态玻璃界面和字体）\
+　　menu-plugin/  -- 右键菜单子模块（mpv-menu-plugin-next，LGPL-2.1）\
+shaders/   -- 超分着色器\
+　　Anime4K/ -- Anime4K 子模块\
+　　ArtCNN/  -- ArtCNN 子模块（MIT）\
+fonts/     -- 链到 ui/modern-glass/fonts 里的 Inter，不放授权文件\
 script-opts/ -- 只放和上游默认不同的选项\
 　　modernz.conf        -- language=zh\
 　　modernz-locale.json -- 链到子模块里的界面翻译\
@@ -25,8 +27,8 @@ script-opts/ -- 只放和上游默认不同的选项\
 scripts/   -- 脚本文件目录\
 　　clipboard.lua　　-- 从系统剪切板获取链接并播放\
 　　bili-danmaku.lua -- B站弹幕自动下载/转换/挂载\
-　　modernz.lua      -- 链到 modern-glass/modernz.lua\
-　　menu/            -- 链到 menu-plugin/src/scripts/menu\
+　　modernz.lua      -- 链到 ui/modern-glass/modernz.lua\
+　　menu/            -- 链到 ui/menu-plugin/src/scripts/menu\
 　　sr.lua           -- Ctrl+1 开关超分
 
 # 使用方式
@@ -84,14 +86,14 @@ scripts/   -- 脚本文件目录\
 
 ## 右键菜单
 
-右键弹出菜单。脚本在子模块 `menu-plugin`，协议 LGPL-2.1，原文在 `menu-plugin/LICENSE.LGPL`，没有另拷一份。样式 `script-opts/menu_style.conf` 链到仓库里的磨砂玻璃配置。
+右键弹出菜单。脚本在子模块 `ui/menu-plugin`，协议 LGPL-2.1，原文在 `ui/menu-plugin/LICENSE.LGPL`，没有另拷一份。样式 `script-opts/menu_style.conf` 链到仓库里的磨砂玻璃配置。
 
 菜单项写在 `input.conf` 的 `#menu:` 后面。`` Ctrl+` ``、`d`、`Ctrl+V` 还是原来的 RIFE、弹幕和剪贴板。超分在「视频 > 超分模式」里。
 
 更新菜单脚本：
 
 ```bash
-git submodule update --remote menu-plugin
+git submodule update --remote ui/menu-plugin
 ```
 
 # 插帧流程
