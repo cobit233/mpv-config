@@ -12,12 +12,13 @@ clip = core.resize.Bicubic(
     matrix_in_s="709"
 )
 
-# 插帧
+# 插帧。fps_den 必须一起给，否则当前 vsrife 会忽略 fps_num，只做 2 倍。
 target_fps = 120
 clip = vsrife.rife(
     clip,
     model="4.22.lite",
     fps_num=target_fps,
+    fps_den=1,
     auto_download=True
 )
 
@@ -27,5 +28,10 @@ clip = core.resize.Bicubic(
     format=vs.YUV420P8,
     matrix_s="709"
 )
+
+# mpv 靠这两项累加每帧时间。vsrife 会把源帧时长拷到插出来的每一帧上，
+# 弹幕按这个时间走，就会变慢并且一跳一跳。
+clip = core.std.SetFrameProp(clip, prop="_DurationNum", intval=1)
+clip = core.std.SetFrameProp(clip, prop="_DurationDen", intval=target_fps)
 
 clip.set_output()
