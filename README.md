@@ -1,6 +1,6 @@
 # 简介
 
-个人使用的MPV配置，包括超分，插帧。同时做了简单的快捷键处理。
+个人使用的MPV配置，包括超分、插帧和 ModernGlass 界面。同时做了简单的快捷键处理。
 
 # 系统
 
@@ -13,10 +13,19 @@
 input.conf -- 键盘绑定配置文件\
 mpv.conf   -- 主配置文件\
 rife.vpy   -- 插帧脚本文件，用于调用 RIFE 模型（GPU）进行插帧处理\
+modern-glass/ -- ModernGlass 子模块（液态玻璃界面和字体）\
+menu-plugin/ -- 右键菜单子模块（mpv-menu-plugin-next，LGPL-2.1）\
+shaders/   -- Anime4K 子模块\
+fonts/     -- 链到 modern-glass/fonts 里的 Inter，不放授权文件\
+script-opts/ -- 只放和上游默认不同的选项\
+　　modernz.conf        -- language=zh\
+　　modernz-locale.json -- 链到子模块里的界面翻译\
+　　menu_style.conf     -- 链到子模块里的磨砂玻璃样式。脚本只认这个文件名\
 scripts/   -- 脚本文件目录\
 　　clipboard.lua　　-- 从系统剪切板获取链接并播放\
 　　bili-danmaku.lua -- B站弹幕自动下载/转换/挂载\
-shaders/   -- 超分所需文件
+　　modernz.lua      -- 链到 modern-glass/modernz.lua\
+　　menu/            -- 链到 menu-plugin/src/scripts/menu
 
 # 使用方式
 
@@ -32,7 +41,8 @@ shaders/   -- 超分所需文件
 
   配置结束后，可清理下载过程中的whl缓存文件
   > pip cache purge
-- 将本项目所有文件放在\~/.config/mpv下，mpv启动会自行读取配置
+- 将本项目放在\~/.config/mpv下。Anime4K、ModernGlass、右键菜单都是子模块，克隆后要初始化：
+  > git submodule update --init
 
 # 快捷键
 
@@ -70,6 +80,18 @@ shaders/   -- 超分所需文件
 \| J |          切换字幕轨道\
 \| # |          切换音轨
 \| d |          开/关B站弹幕（默认开启，详见「B站在线播放与弹幕」）
+
+## 右键菜单
+
+右键弹出菜单。脚本在子模块 `menu-plugin`，协议 LGPL-2.1，原文在 `menu-plugin/LICENSE.LGPL`，没有另拷一份。样式 `script-opts/menu_style.conf` 链到仓库里的磨砂玻璃配置。
+
+菜单项写在 `input.conf` 的 `#menu:` 后面。`Ctrl+0` 到 `Ctrl+3`、`` Ctrl+` ``、`d`、`Ctrl+V` 还是原来的 Anime4K、RIFE、弹幕和剪贴板。
+
+更新菜单脚本：
+
+```bash
+git submodule update --remote menu-plugin
+```
 
 # 插帧流程
 
@@ -188,4 +210,7 @@ script-opts-append=bili-danmaku-duration_marquee=12
 
 
 # 感谢
-感谢DeepSeek大肥鱼，大部分配置和代码都是她写的。
+感谢DeepSeek大肥鱼和Grok，大部分配置和代码都是她们写的。\
+感谢[mpv.config](https://github.com/akFace/mpv.config)，使用了他很多配置。\
+感谢[ModernGlass](https://github.com/Demetter/ModernGlass) 的界面美化。\
+感谢[mpv-menu-plugin-next](https://github.com/mpvConfig/mpv-menu-plugin-next) 的界面美化。
