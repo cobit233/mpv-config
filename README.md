@@ -16,6 +16,7 @@ rife.vpy   -- 插帧脚本文件，用于调用 RIFE 模型（GPU）进行插�
 modern-glass/ -- ModernGlass 子模块（液态玻璃界面和字体）\
 menu-plugin/ -- 右键菜单子模块（mpv-menu-plugin-next，LGPL-2.1）\
 shaders/   -- Anime4K 子模块\
+artcnn/    -- ArtCNN 子模块（可选超分，MIT）\
 fonts/     -- 链到 modern-glass/fonts 里的 Inter，不放授权文件\
 script-opts/ -- 只放和上游默认不同的选项\
 　　modernz.conf        -- language=zh\
@@ -25,7 +26,8 @@ scripts/   -- 脚本文件目录\
 　　clipboard.lua　　-- 从系统剪切板获取链接并播放\
 　　bili-danmaku.lua -- B站弹幕自动下载/转换/挂载\
 　　modernz.lua      -- 链到 modern-glass/modernz.lua\
-　　menu/            -- 链到 menu-plugin/src/scripts/menu
+　　menu/            -- 链到 menu-plugin/src/scripts/menu\
+　　sr.lua           -- Ctrl+1 开关超分
 
 # 使用方式
 
@@ -41,7 +43,7 @@ scripts/   -- 脚本文件目录\
 
   配置结束后，可清理下载过程中的whl缓存文件
   > pip cache purge
-- 将本项目放在\~/.config/mpv下。Anime4K、ModernGlass、右键菜单都是子模块，克隆后要初始化：
+- 将本项目放在\~/.config/mpv下。Anime4K、ArtCNN、ModernGlass、右键菜单都是子模块，克隆后要初始化：
   > git submodule update --init
 
 # 快捷键
@@ -50,14 +52,13 @@ scripts/   -- 脚本文件目录\
 
 \| Ctrl + \` | 开启/关闭 RIFE 插帧（默认开启，插帧到120fps，可自行修改rife.vpy中的target\_fps）
 
-## Anime4K 超分
+## 超分
 
-越往下效果越好
+默认是 Anime4K 极致：去模糊、Restore CNN L、放大 CNN x2 L。
 
-\| Ctrl + 0 | 关闭 Anime4K\
-\| Ctrl + 1 | Upscale CNN x2 S\
-\| Ctrl + 2 | Restore CNN M + Upscale CNN x2 M\
-\| Ctrl + 3 | Deblur DoG + Restore CNN L + Upscale CNN x2 L（默认）
+\| Ctrl + 1 | 开关超分。开的时候就是这个极致档
+
+其他档位在右键「视频 > 超分模式」里用鼠标选，没有快捷键。Anime4K 还有轻量和推荐。ArtCNN 有中性、去噪锐化、去噪柔化、轻量。画面没有比片源大约 1.3 倍时，着色器不会放大。
 
 ## 从剪切板播放
 
@@ -85,7 +86,7 @@ scripts/   -- 脚本文件目录\
 
 右键弹出菜单。脚本在子模块 `menu-plugin`，协议 LGPL-2.1，原文在 `menu-plugin/LICENSE.LGPL`，没有另拷一份。样式 `script-opts/menu_style.conf` 链到仓库里的磨砂玻璃配置。
 
-菜单项写在 `input.conf` 的 `#menu:` 后面。`Ctrl+0` 到 `Ctrl+3`、`` Ctrl+` ``、`d`、`Ctrl+V` 还是原来的 Anime4K、RIFE、弹幕和剪贴板。
+菜单项写在 `input.conf` 的 `#menu:` 后面。`` Ctrl+` ``、`d`、`Ctrl+V` 还是原来的 RIFE、弹幕和剪贴板。超分在「视频 > 超分模式」里。
 
 更新菜单脚本：
 
@@ -125,7 +126,7 @@ git submodule update --remote menu-plugin
 
 # 超分流程
 
-借由Anime4K实现，只需要在mpv.conf中定义需要的超分mode即可。
+借由 Anime4K / ArtCNN 实现，只需要在mpv.conf中定义需要的超分mode即可。
 
 
 # B站在线播放与弹幕
