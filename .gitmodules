@@ -1,6 +1,7 @@
 [submodule "shaders"]
 	path = shaders/Anime4K
 	url = https://github.com/bloc97/Anime4K.git
+	branch = master
 [submodule "modern-glass"]
 	path = ui/modern-glass
 	url = https://github.com/Demetter/ModernGlass.git
