@@ -31,9 +31,10 @@ local modes = {
 local default_mode = "a4k_ultra"
 local last_mode = default_mode
 
--- modernz.lua 自己挂的玻璃模糊着色器也在 glsl-shaders 里，换档时不能动它。
+-- modernz.lua 和菜单（menu-liquid-glass）自己挂的玻璃模糊着色器也在 glsl-shaders 里，换档时不能动它们。
 local function is_glass(path)
     return path:find("modernz-glass", 1, true) ~= nil
+        or path:find("menu-liquid-glass", 1, true) ~= nil
 end
 
 local function upscale_paths()
