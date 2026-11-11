@@ -28,10 +28,11 @@
 ├── scripts/
 │   ├── bili-danmaku.lua     B 站弹幕下载、转换、挂载
 │   ├── idle-screen.lua      空闲界面：渐变背景，自动弹出最近播放
+│   ├── interpolation.lua    插帧开关，启动时挂上
 │   ├── menu/                链接 · 右键菜单脚本
 │   ├── modernz.lua          链接 · 界面脚本
 │   ├── play-clipboard.lua   播放剪贴板里的链接
-│   └── upscale.lua          超分开关，启动时挂上默认档
+│   └── upscale.lua          超分档位和开关，启动时挂上默认档
 └── third_party/
     ├── Anime4K/             超分着色器
     ├── ArtCNN/              超分着色器
@@ -90,7 +91,7 @@ paru -S python-biliass
 | j         | 切换字幕轨道     |                                                                                                            |
 | #         | 切换音轨       |                                                                                                            |
 | 右键        | 弹出菜单       |                                                                                                            |
-| Ctrl+`    | 开关 RIFE 插帧 | 默认开启，目标 120fps，在 `frame-interpolation/rife.vpy` 的 `target_fps` 修改                                          |
+| Ctrl+`    | 开关 RIFE 插帧 | 默认开启，2 倍                                                                                                   |
 | Ctrl+1    | 开关超分       | 默认开启，Anime4K 极致档（去模糊 + Restore CNN L + 放大 CNN x2 L）。其他档位在右键「视频 > 超分模式」里选                                   |
 | Ctrl+V    | 播放剪贴板里的链接  | 读取 Ctrl+C 复制的内容                                                                                            |
 | h         | 打开最近播放列表   | 空闲时自动弹出。↑/↓ 选择，Enter 播放，输入文字可过滤，Esc 关闭，最后一项「Clear history」清空历史。记录在`~/.local/state/mpv/watch_history.jsonl` |
@@ -107,6 +108,8 @@ paru -S python-biliass
 - **vsrife**：把 RIFE 封装成 VapourSynth 可调用的函数 `vsrife.rife(...)`。
 - **RIFE 模型**：输入两帧，生成中间帧，在 GPU 上运行。
 
+固定 2 倍插帧，模型 `4.22.lite`，半精度推理。RTX 4070 上 1080p 源实测约 88 帧/秒（只算插帧，不含超分），24fps 插到 48fps 有余量。4K 源会自动把光流降到半分辨率，但也只有约 28 帧/秒，会卡。
+
 后续可以优化的方向：
 
 - 自动判断低帧率才插帧
@@ -114,7 +117,7 @@ paru -S python-biliass
 
 ### 5.2. 超分
 
-由 Anime4K / ArtCNN 着色器实现。默认档位的着色器链定义在 `scripts/upscale.lua`，其他档位写在 `input.conf` 的菜单项里。
+由 Anime4K / ArtCNN 着色器实现。所有档位的着色器链都定义在 `scripts/upscale.lua`，`input.conf` 的菜单项只按名字切换，当前档位会打勾。
 
 ### 5.3. B 站在线播放与弹幕
 
