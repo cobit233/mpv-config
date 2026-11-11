@@ -80,11 +80,30 @@ end
 local idle = false
 local opened_history = false
 
+local function play_clipboard()
+    mp.commandv("script-message-to", "console", "disable")
+    mp.commandv("script-binding", "play_clipboard/play")
+end
+
+-- console 打开后独占键盘，Ctrl+V 只会粘贴进输入框；绑定要在 console 之后注册才能盖过它。
+-- console 设完 open 属性后还会再注册一次鼠标绑定，所以稍等再注册。
+mp.observe_property("user-data/mpv/console/open", "bool", function(_, open)
+    if open and opened_history then
+        mp.add_timeout(0.1, function()
+            if console_open() then
+                mp.add_forced_key_binding("Ctrl+v", "history-play-clipboard", play_clipboard)
+            end
+        end)
+    else
+        mp.remove_key_binding("history-play-clipboard")
+    end
+end)
+
 local function open_history()
     -- 没有历史文件时 select.lua 会弹报错，第一次启动直接跳过。
     if not idle or console_open() or not history_exists() then return end
-    mp.commandv("script-binding", "select/select-watch-history")
     opened_history = true
+    mp.commandv("script-binding", "select/select-watch-history")
 end
 
 mp.observe_property("idle-active", "bool", function(_, active)

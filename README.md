@@ -1,4 +1,4 @@
-<h1 align="center">mpv-config</h1>
+# mpv-config
 
 个人使用的 mpv 配置，包括超分、插帧、B 站在线播放与弹幕支持。
 
@@ -49,13 +49,13 @@
 paru -S mpv-git
 ```
 
-- 安装插帧依赖：VapourSynth 框架，以及 vsrife 需要的 PyTorch（CUDA 版）等 Python 包。vsrife 本身在子模块 `third_party/vs-rife` 里，不需要 pip 安装。
+- 安装插帧依赖：VapourSynth 框架，以及 vsrife 需要的 PyTorch（CUDA 版）等 Python 包。
 
 ```bash
 sudo pacman -S vapoursynth python-pytorch-cuda python-numpy python-requests python-tqdm
 ```
 
-- 克隆到 `~/.config/mpv`（`rife.vpy` 按这个路径加载 vsrife），同时拉取子模块。第一次播放时会自动下载插帧模型（默认 `4.22.lite`）。
+- 克隆到 `~/.config/mpv`（`rife.vpy` 按这个路径加载 vsrife），同时拉取子模块。第一次播放时会自动下载插帧模型（当前只使用了 `4.22.lite`）。
 
 ```bash
 git clone --recurse-submodules <仓库地址> ~/.config/mpv
@@ -68,34 +68,39 @@ git submodule update --init   # 克隆时没带 --recurse-submodules 的话补�
 sudo pacman -S wl-clipboard
 ```
 
-- （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用；biliass 把弹幕 XML 转成 ASS。
+- （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用。
 
 ```bash
 sudo pacman -S yt-dlp
+```
+
+- （可选）安装biliass，显示 B 站弹幕。
+
+```bash
 paru -S python-biliass
 ```
 
 ## 4. 快捷键
 
-| 按键        | 作用         | 其他说明                                                                                                       |
-| --------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
-| Space / p | 暂停/播放      |                                                                                                            |
-| ← / →     | 后退/前进 5 秒  |                                                                                                            |
-| ↓ / ↑     | 后退/前进 1 分钟 |                                                                                                            |
-| Backspace | 恢复默认速度     |                                                                                                            |
-| 9 / 0     | 降低/提高音量    |                                                                                                            |
-| m         | 静音         |                                                                                                            |
-| f         | 全屏切换       |                                                                                                            |
-| i         | 查看视频信息     |                                                                                                            |
-| v         | 显示/隐藏字幕    |                                                                                                            |
-| j         | 切换字幕轨道     |                                                                                                            |
-| #         | 切换音轨       |                                                                                                            |
-| 右键        | 弹出菜单       |                                                                                                            |
-| Ctrl+`    | 开关 RIFE 插帧 | 默认开启，2 倍                                                                                                   |
-| Ctrl+1    | 开关超分       | 默认开启，Anime4K 极致档（去模糊 + Restore CNN L + 放大 CNN x2 L）。其他档位在右键「视频 > 超分模式」里选                                   |
-| Ctrl+V    | 播放剪贴板里的链接  | 读取 Ctrl+C 复制的内容                                                                                            |
-| h         | 打开最近播放列表   | 空闲时自动弹出。↑/↓ 选择，Enter 播放，输入文字可过滤，Esc 关闭，最后一项「Clear history」清空历史。记录在`~/.local/state/mpv/watch_history.jsonl` |
-| d         | 开关 B 站弹幕   | 默认开启                                                                                                       |
+| 按键        | 作用         | 其他说明                                                                     |
+| --------- | ---------- | ------------------------------------------------------------------------ |
+| Space / p | 暂停/播放      |                                                                          |
+| ← / →     | 后退/前进 5 秒  |                                                                          |
+| ↓ / ↑     | 后退/前进 1 分钟 |                                                                          |
+| Backspace | 恢复默认速度     |                                                                          |
+| 9 / 0     | 降低/提高音量    |                                                                          |
+| m         | 静音         |                                                                          |
+| f         | 全屏切换       |                                                                          |
+| i         | 查看视频信息     |                                                                          |
+| v         | 显示/隐藏字幕    |                                                                          |
+| j         | 切换字幕轨道     |                                                                          |
+| #         | 切换音轨       |                                                                          |
+| 右键        | 弹出菜单       |                                                                          |
+| Ctrl+`    | 开关 RIFE 插帧 | 默认开启，2 倍                                                                 |
+| Ctrl+1    | 开关超分       | 默认开启，Anime4K 极致档（去模糊 + Restore CNN L + 放大 CNN x2 L）。其他档位在右键「视频 > 超分模式」里选 |
+| Ctrl+V    | 播放剪贴板里的链接  | 读取 Ctrl+C 复制的内容                                                          |
+| h         | 打开最近播放列表   | 空闲时自动弹出。↑/↓ 选择，历史记录在`~/.local/state/mpv/watch_history.jsonl`             |
+| d         | 开关 B 站弹幕   | 默认开启                                                                     |
 
 完整按键见 `input.conf`。
 
@@ -163,7 +168,7 @@ script-opts-append=bili-danmaku-duration_marquee=12
 #### 5.3.3. 排障
 
 - **画质还是 480P**：Edge 的 `Default` profile 里没登录 B 站，或者 cookie 读取失败。Edge 有多个 profile 时，yt-dlp 默认只读 `Default`。
-- **完全播不了，日志出现 `[ytdl_hook] youtube-dl failed`**：把 `mpv.conf` 末尾 `[bili]` 段里的 `cookies-from-browser=edge,` 删掉，降级为无登录。
+- **完全播不了，日志出现** `[ytdl_hook] youtube-dl failed`：把 `mpv.conf` 末尾 `[bili]` 段里的 `cookies-from-browser=edge,` 删掉，降级为无登录。
 - **没有弹幕**：先按 `d` 确认弹幕是开的。仍然没有的话，加上 `script-opts-append=bili-danmaku-keep_intermediate=yes` 保留中间 XML 排查。想强制重新抓取，在 `input.conf` 里绑一个快捷键调用 `script-message bili-danmaku-reload`。
 
 ## 6. 感谢
