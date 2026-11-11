@@ -2,15 +2,19 @@
 	path = third_party/Anime4K
 	url = https://github.com/bloc97/Anime4K.git
 	branch = master
+	shallow = true
 [submodule "third_party/ArtCNN"]
 	path = third_party/ArtCNN
 	url = https://github.com/Artoriuz/ArtCNN.git
 	branch = main
+	shallow = true
 [submodule "third_party/modern-glass"]
 	path = third_party/modern-glass
 	url = https://github.com/Demetter/ModernGlass.git
 	branch = main
+	shallow = true
 [submodule "third_party/menu-plugin"]
 	path = third_party/menu-plugin
 	url = https://github.com/mpvConfig/mpv-menu-plugin-next.git
 	branch = main
+	shallow = true
