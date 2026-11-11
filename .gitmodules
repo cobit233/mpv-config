@@ -1,16 +1,16 @@
-[submodule "shaders"]
-	path = shaders/Anime4K
+[submodule "third_party/Anime4K"]
+	path = third_party/Anime4K
 	url = https://github.com/bloc97/Anime4K.git
 	branch = master
-[submodule "modern-glass"]
-	path = ui/modern-glass
+[submodule "third_party/ArtCNN"]
+	path = third_party/ArtCNN
+	url = https://github.com/Artoriuz/ArtCNN.git
+	branch = main
+[submodule "third_party/modern-glass"]
+	path = third_party/modern-glass
 	url = https://github.com/Demetter/ModernGlass.git
 	branch = main
-[submodule "menu-plugin"]
-	path = ui/menu-plugin
+[submodule "third_party/menu-plugin"]
+	path = third_party/menu-plugin
 	url = https://github.com/mpvConfig/mpv-menu-plugin-next.git
-	branch = main
-[submodule "artcnn"]
-	path = shaders/ArtCNN
-	url = https://github.com/Artoriuz/ArtCNN.git
 	branch = main

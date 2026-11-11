@@ -1,176 +1,167 @@
-# 简介
+# mpv-config
 
-个人使用的MPV配置，包括超分、插帧和 ModernGlass 界面。同时做了简单的快捷键处理。
+个人使用的 mpv 配置，包括超分、插帧、B 站在线播放与弹幕，以及 ModernGlass 界面和右键菜单。
 
-# 系统
+## 系统
 
 - Arch Linux
 - Wayland
-- Nvidia GPU
+- NVIDIA GPU
 
-# 文件目录
+配置依赖符号链接，只在 Linux 上使用。
 
-input.conf -- 键盘绑定配置文件  
-mpv.conf   -- 主配置文件  
-rife.vpy   -- 插帧脚本文件，用于调用 RIFE 模型（GPU）进行插帧处理  
-ui/       -- 界面  
-　　modern-glass/ -- ModernGlass 子模块（液态玻璃界面和字体）  
-　　menu-plugin/  -- 右键菜单子模块（mpv-menu-plugin-next，LGPL-2.1）  
-shaders/   -- 超分着色器  
-　　Anime4K/ -- Anime4K 子模块  
-　　ArtCNN/  -- ArtCNN 子模块（MIT）  
-fonts/     -- 链到 ui/modern-glass/fonts 里的 Inter，不放授权文件  
-script-opts/ -- 只放和上游默认不同的选项  
-　　modernz.conf        -- language=zh  
-　　modernz-locale.json -- 链到子模块里的界面翻译  
-　　menu_style.conf     -- 链到子模块里的磨砂玻璃样式。脚本只认这个文件名  
-scripts/   -- 脚本文件目录  
-　　clipboard.lua　　-- 从系统剪切板获取链接并播放  
-　　bili-danmaku.lua -- B站弹幕自动下载/转换/挂载  
-　　modernz.lua      -- 链到 ui/modern-glass/modernz.lua  
-　　menu/            -- 链到 ui/menu-plugin/src/scripts/menu  
-　　sr.lua           -- Ctrl+1 开关超分
+## 文件目录
 
-# 使用方式
+`third_party/` 下是第三方子模块，其余是本仓库维护的配置。标「链接」的是指向子模块的符号链接。
 
-- 安装mpv（播放器）
-  > 2026-07-26更新：paru -S mpv安装的版本，不支持vf=vapoursynth=路径的语法，插帧失败，改为pacman -S mpv-git后成功
-- 安装vapourSynth（视频处理依赖）
-  > paru -S vapoursynth
-- 安装vsrife（插帧依赖）
+```text
+.
+├── mpv.conf                 主配置
+├── input.conf               快捷键和右键菜单
+├── frame-interpolation/
+│   └── rife.vpy             RIFE 插帧滤镜
+├── scripts/
+│   ├── upscale.lua          超分开关，启动时挂上默认档
+│   ├── play-clipboard.lua   播放剪贴板里的链接
+│   ├── bili-danmaku.lua     B 站弹幕下载、转换、挂载
+│   ├── modernz.lua          链接 · 界面脚本
+│   └── menu/                链接 · 右键菜单脚本
+├── script-opts/
+│   ├── modernz.conf         界面选项（只写和默认不同的项）
+│   ├── modernz-locale.json  链接 · 界面翻译
+│   └── menu_style.conf      链接 · 菜单磨砂玻璃样式
+├── fonts/                   链接 · 界面用的 Inter 字体
+└── third_party/
+    ├── Anime4K/             超分着色器
+    ├── ArtCNN/              超分着色器
+    ├── modern-glass/        液态玻璃界面
+    └── menu-plugin/         右键菜单
+```
 
-  由于Arch没有维护AUR包，所以只能暂且使用pip安装管理。当然这并非Arch推荐的处理方式，故如果不加break-system-packages参数无法安装。如果有兴趣可以自行去AUR维护......
-  > pip install vsrife --break-system-packages
-  > 如果没有插帧模型则播放视频的时候自动下载(rife.vpy中设置了autodownload=True，默认4.22.lite)。当然也可以python -m vsrife下载相应的模型
+## 安装
 
-  配置结束后，可清理下载过程中的whl缓存文件
-  > pip cache purge
-- 将本项目放在/.config/mpv下。Anime4K、ArtCNN、ModernGlass、右键菜单都是子模块，克隆后要初始化：
-  > git submodule update --init
+1. 安装 mpv。需要 AUR 的 `mpv-git`，官方仓库的 `mpv` 不支持 `vf=vapoursynth=路径` 的写法，插帧会失败。
 
-# 快捷键
+   ```bash
+   paru -S mpv-git
+   ```
 
-## 插帧
+2. 安装 VapourSynth（插帧框架）。
+
+   ```bash
+   sudo pacman -S vapoursynth
+   ```
+
+3. 安装 vsrife（插帧依赖）。Arch 没有维护对应的包，只能用 pip 装，所以要加 `--break-system-packages`。
+
+   ```bash
+   pip install vsrife --break-system-packages
+   pip cache purge   # 可选，清理下载的 whl 缓存
+   ```
+
+   第一次播放时会自动下载插帧模型（默认 `4.22.lite`），也可以用 `python -m vsrife` 提前下载。
+
+4. 克隆到 mpv 配置目录，同时拉取子模块。
+
+   ```bash
+   git clone --recurse-submodules <仓库地址> ~/.config/mpv
+   ```
+
+   如果克隆时没带 `--recurse-submodules`，补一次：
+
+   ```bash
+   git submodule update --init
+   ```
+
+5. （可选）安装剪贴板工具，Ctrl+V 播放链接用。
+
+   ```bash
+   sudo pacman -S wl-clipboard
+   ```
+
+6. （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用；biliass 把弹幕 XML 转成 ASS。
+
+   ```bash
+   sudo pacman -S yt-dlp
+   paru -S python-biliass
+   ```
+
+## 快捷键
+
+### 插帧
 
 | 按键 | 作用 |
 | --- | --- |
-| `` Ctrl+` `` | 开启/关闭 RIFE 插帧（默认开启，插帧到 120fps，可自行修改 rife.vpy 中的 target_fps） |
+| Ctrl+\` | 开关 RIFE 插帧（默认开启，目标 120fps，在 `frame-interpolation/rife.vpy` 的 `target_fps` 修改） |
 
-## 超分
-
-默认是 Anime4K 极致：去模糊、Restore CNN L、放大 CNN x2 L。
+### 超分
 
 | 按键 | 作用 |
 | --- | --- |
-| Ctrl+1 | 开关超分。开的时候就是这个极致档 |
+| Ctrl+1 | 开关超分（默认开启，Anime4K 极致档：去模糊 + Restore CNN L + 放大 CNN x2 L） |
 
-其他档位在右键「视频 > 超分模式」里用鼠标选，没有快捷键。Anime4K 还有轻量和推荐。ArtCNN 有中性、去噪锐化、去噪柔化、轻量。画面没有比片源大约 1.3 倍时，着色器不会放大。
+其他档位在右键「视频 > 超分模式」里选：Anime4K 轻量、推荐，ArtCNN 中性、去噪锐化、去噪柔化、轻量。窗口没有比片源大约 1.3 倍时，着色器不会放大。
 
-## 从剪切板播放
+### 播放剪贴板链接
 
 | 按键 | 作用 |
 | --- | --- |
-| Ctrl+V | 从系统剪切板获取链接并播放 |
+| Ctrl+V | 播放剪贴板（Ctrl+C 复制的内容）里的链接 |
 
-> 需要安装 wl-paste：sudo pacman -S wl-paste
-
-## 常用 mpv 默认快捷键
+### 常用
 
 | 按键 | 作用 |
 | --- | --- |
 | i | 查看视频信息（帧率/分辨率/编码等） |
 | f | 全屏切换 |
 | Space / p | 暂停/播放 |
-| ← / → | 快退/快进 5 秒 |
-| ↑ / ↓ | 快退/快进 1 分钟 |
+| ← / → | 后退/前进 5 秒 |
+| ↓ / ↑ | 后退/前进 1 分钟 |
 | Backspace | 恢复默认速度 |
 | 9 / 0 | 降低/提高音量 |
 | m | 静音 |
-| V | 显示/隐藏字幕 |
-| J | 切换字幕轨道 |
+| v | 显示/隐藏字幕 |
+| j | 切换字幕轨道 |
 | # | 切换音轨 |
-| d | 开/关 B 站弹幕（默认开启，详见「B站在线播放与弹幕」） |
+| d | 开关 B 站弹幕（默认开启） |
+| 右键 | 弹出菜单 |
 
-## 右键菜单
+完整按键见 `input.conf`。
 
-右键弹出菜单。脚本在子模块 `ui/menu-plugin`，协议 LGPL-2.1，原文在 `ui/menu-plugin/LICENSE.LGPL`，没有另拷一份。样式 `script-opts/menu_style.conf` 链到仓库里的磨砂玻璃配置。
+## 原理
 
-菜单项写在 `input.conf` 的 `#menu:` 后面。`Ctrl+``、`d`、`Ctrl+V` 还是原来的 RIFE、弹幕和剪贴板。超分在「视频 > 超分模式」里。
+### 插帧
 
-更新菜单脚本：
+1. **mpv**：解码视频（硬件加速），调用 VapourSynth 滤镜，输出画面（Vulkan）。
+2. **VapourSynth**：视频处理框架，接收 mpv 解码后的帧，用 Python 处理后交回 mpv。
+3. **vsrife**：把 RIFE 封装成 VapourSynth 可调用的函数 `vsrife.rife(...)`。
+4. **RIFE 模型**：输入两帧，生成中间帧，在 GPU 上运行。
 
-```bash
-git submodule update --remote ui/menu-plugin
-```
+后续可以优化的方向：
 
-# 插帧流程
+- 自动判断低帧率才插帧
+- 降分辨率再插帧（大幅降低负载）
 
-1. mpv
+### 超分
 
-   播放器本体,pacman直接安装  
-    作用：  
-        解码视频（硬件加速）  
-        调用滤镜（VapourSynth）  
-        输出画面（Vulkan）
-2. VapourSynth\
+由 Anime4K / ArtCNN 着色器实现。默认档位的着色器链定义在 `scripts/upscale.lua`，其他档位写在 `input.conf` 的菜单项里。
 
-   视频处理框架（核心中间层）  
-    作用：  
-        接收 mpv 解码后的视频  
-        使用 Python 处理帧  
-        把处理后的帧再交回 mpv
-3. vsrife（RIFE 的"接口层"）\
+## B 站在线播放与弹幕
 
-   作用：  
-        把 AI 插帧算法封装成 VapourSynth 可调用函数  
-        提供 vsrife.rife(...)库函数
-4. RIFE 模型真正干活的 AI 模型\
-
-   作用：  
-        输入两帧 → 生成中间帧
-5. Vulkan / GPU\
-
-   硬件加速层  
-    作用：  
-        让 RIFE 插帧在 GPU 上跑
-
-如果想继续优化：  
-自动判断低帧率才插帧  
-降分辨率再插帧（大幅降负载）
-
-# 超分流程
-
-借由 Anime4K / ArtCNN 实现，只需要在mpv.conf中定义需要的超分mode即可。
-
-# B站在线播放与弹幕
-
-直接把b站链接丢给 mpv 即可，不要复制m4s链接
+装好安装第 6 步的依赖后，直接把 B 站链接丢给 mpv 即可，不要复制 m4s 链接。
 
 ```bash
 mpv "https://www.bilibili.com/video/BVxxxxxxxx"
 ```
 
-## 依赖安装
+### 画质与登录
 
-- yt-dlp\
-  > sudo pacman -S yt-dlp  
-  >  作用：解析页面链接 → 换回已授权的播放地址
-- biliass\
-  > paru -S python-biliass  
-  >  作用：弹幕 XML → ASS 转换，提供 `/usr/bin/biliass`
+B 站对番剧等内容**未登录硬卡 480P**。`mpv.conf` 末尾的 `[bili]` profile 从 Edge 读取 cookie（前提是 Edge 的 Default profile 里已登录 B 站），从而解锁 720P / 1080P。
 
-mpv 内置的 `ytdl_hook` 会自动调用它，需要一个在 PATH 里的 `yt-dlp` 可执行文件。
+选流策略（两者同时生效）：
 
-## 画质与登录
-
-B站对番剧等内容**未登录硬卡 480P**。`mpv.conf` 末尾的 `[bili]` profile 从 Edge 读取 cookie  
-（前提：Edge 的 Default profile 里已登录 B站），从而解锁 720P / 1080P。
-
-选流策略（两者同时生效）：\
-
-1) ytdl-format 强制 h264（avc1）：B站 DASH 的 av1 档只有 ~600kbps，h264 档有 ~2600kbps（4 倍多）。\
-拿低码率源喂 Anime4K 会把压缩伪影一起放大，所以这里限定 h264。\
-2) format-sort=br：在满足 h264 + 1080P 上限的候选里，选码率最高的一条。
+1. `ytdl-format` 限定 h264（avc1）。B 站 DASH 的 av1 档只有约 600kbps，h264 档约 2600kbps，低码率源喂给 Anime4K 会把压缩伪影一起放大。
+2. `format-sort=br`：在 h264 + 1080P 上限的候选里，选码率最高的一条。
 
 自检命令：
 
@@ -179,59 +170,40 @@ yt-dlp --cookies-from-browser edge -f 'bv*[height<=1080][vcodec^=avc1]' --get-ur
   | grep -oE '_nb[0-9]*-1-[0-9]+\.m4s'
 ```
 
-输出含 `_30080.m4s` = 1080P，登录态生效；输出 `_30032.m4s` = 480P，cookie 没读到。
+输出含 `_30080.m4s` 表示 1080P，登录态生效；输出 `_30032.m4s` 表示 480P，cookie 没读到。
 
-## 弹幕是怎么挂上的
+### 弹幕
 
-mpv 的 `ytdl_hook` 用 `yt-dlp -J` 模式运行，弹幕轨只有原始 XML，mpv 不认这个格式。  
-所以 `bili-danmaku.lua` 会在加载后独立再跑一次 yt-dlp 把 XML 落盘，交给 biliass 转成 ASS，  
-再用 `sub-add` 挂载，并移除那个无法解析的内置轨。
+mpv 的 `ytdl_hook` 拿到的弹幕轨只有原始 XML，mpv 不认这个格式。`bili-danmaku.lua` 会在加载后再跑一次 yt-dlp 把 XML 落盘，交给 biliass 转成 ASS，再用 `sub-add` 挂载，并移除那个无法解析的内置轨。
 
-## 弹幕缓存
+弹幕缓存在 `~/.cache/bili-danmaku/`，只缓存 ASS（几百 KB），默认 1 天过期。
 
-```
-~/.cache/bili-danmaku/<URL>-<hash>/danmaku-v<版本>.ass
-```
-
-只缓存弹幕 ASS（几百 KB 量级），视频音频不落盘（mpv 流式播放）。默认 1 天过期。
-
-## 快捷键
-
- d | 开/关弹幕（默认开启）
-
-## 可调参数
-
-字体、字号、弹幕停留时长、分类屏蔽、关键词屏蔽、缓存天数等全部参数，  
-见 `scripts/bili-danmaku.lua` 头部注释。在 `mpv.conf` 里用 script-opts 覆盖：
+字体、字号、停留时长、屏蔽规则、缓存天数等参数见 `scripts/bili-danmaku.lua` 头部注释，在 `mpv.conf` 里用 script-opts 覆盖：
 
 ```ini
 script-opts=bili-danmaku-font_face=Source Han Sans CN
 script-opts-append=bili-danmaku-duration_marquee=12
 ```
 
-改完风格参数后把 `style_version` +1，可让旧缓存失效。
+改完风格参数后把 `style_version` 加 1，可以让旧缓存失效。
 
-## 排障
+### 排障
 
-- **画质还是 480P**：Edge 的 `Default` profile 里没登录 B站；或 cookie 读取失败。  
-注意 Edge 有多个 profile 时 yt-dlp 默认只读 `Default`。
-- **完全播不了 / 日志出现** `[ytdl_hook] youtube-dl failed`：把 `mpv.conf` 末尾 `[bili]` 段里  
-`cookies-from-browser=edge,` 删掉即可降级为无登录。
-- **没有弹幕**：先按 `d` 确认弹幕是开的；若仍没有可加上  
-`script-opts-append=bili-danmaku-keep_intermediate=yes` 保留中间 XML 便于排查；  
-想强制重新抓取可在 input.conf 里绑一个快捷键调用 `script-message bili-danmaku-reload`。
+- **画质还是 480P**：Edge 的 `Default` profile 里没登录 B 站，或者 cookie 读取失败。Edge 有多个 profile 时，yt-dlp 默认只读 `Default`。
+- **完全播不了，日志出现 `[ytdl_hook] youtube-dl failed`**：把 `mpv.conf` 末尾 `[bili]` 段里的 `cookies-from-browser=edge,` 删掉，降级为无登录。
+- **没有弹幕**：先按 `d` 确认弹幕是开的。仍然没有的话，加上 `script-opts-append=bili-danmaku-keep_intermediate=yes` 保留中间 XML 排查。想强制重新抓取，在 `input.conf` 里绑一个快捷键调用 `script-message bili-danmaku-reload`。
 
-# 感谢
+## 感谢
 
-感谢DeepSeek大肥鱼和Grok，大部分配置和代码都是她们写的
+感谢 DeepSeek、Grok、Claude，大部分配置和代码都是她们写的。
 
-感谢以下仓库界面美化配置
+界面美化：
 
-- [akFace/mpv.config](https://github.com/akFace/mpv.config)
-- [Demetter/ModernGlass](https://github.com/Demetter/ModernGlass)
-- [mpvConfig/mpv-menu-plugin-next](https://github.com/mpvConfig/mpv-menu-plugin-next)
+- [akFace/mpv.config](https://github.com/akFace/mpv.config)（LGPL-2.1）
+- [Demetter/ModernGlass](https://github.com/Demetter/ModernGlass)（LGPL-2.1）
+- [mpvConfig/mpv-menu-plugin-next](https://github.com/mpvConfig/mpv-menu-plugin-next)（LGPL-2.1）
 
-感谢以下仓库的超分代码
+超分着色器：
 
-- [bloc97/Anime4K](https://github.com/bloc97/Anime4K)
-- [Artoriuz/ArtCNN](https://github.com/Artoriuz/ArtCNN)
+- [bloc97/Anime4K](https://github.com/bloc97/Anime4K)（MIT）
+- [Artoriuz/ArtCNN](https://github.com/Artoriuz/ArtCNN)（MIT）

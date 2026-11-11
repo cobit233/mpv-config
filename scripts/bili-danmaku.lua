@@ -368,7 +368,7 @@ local function toggle_danmaku()
     start_fetch(url, gen)
 end
 
-mp.add_key_binding("d", "toggle-danmaku", toggle_danmaku)
+mp.add_key_binding(nil, "toggle", toggle_danmaku)
 
 -- ---------------------------------------------------------------- 手动重载（通过 script-message 调用，无默认键位）
 

@@ -1,1 +1,1 @@
-../ui/modern-glass/modernz.lua
+../third_party/modern-glass/modernz.lua
