@@ -18,3 +18,9 @@
 	url = https://github.com/mpvConfig/mpv-menu-plugin-next.git
 	branch = main
 	shallow = true
+[submodule "third_party/vs-rife"]
+	path = third_party/vs-rife
+	url = https://github.com/HolyWu/vs-rife.git
+	branch = master
+	shallow = true
+	ignore = dirty

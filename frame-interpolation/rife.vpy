@@ -1,6 +1,11 @@
+import os
+import sys
+
 import vapoursynth as vs
 core = vs.core
 
+# vsrife 来自子模块 third_party/vs-rife，不走 pip 安装。
+sys.path.insert(0, os.path.expanduser("~/.config/mpv/third_party/vs-rife"))
 import vsrife
 
 clip = video_in

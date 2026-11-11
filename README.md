@@ -35,7 +35,8 @@
     ├── Anime4K/             超分着色器
     ├── ArtCNN/              超分着色器
     ├── modern-glass/        液态玻璃界面
-    └── menu-plugin/         右键菜单
+    ├── menu-plugin/         右键菜单
+    └── vs-rife/             vsrife，RIFE 插帧的 VapourSynth 封装
 ```
 
 ## 安装
@@ -46,22 +47,13 @@
    paru -S mpv-git
    ```
 
-2. 安装 VapourSynth（插帧框架）。
+2. 安装插帧依赖：VapourSynth 框架，以及 vsrife 需要的 PyTorch（CUDA 版）等 Python 包。vsrife 本身在子模块 `third_party/vs-rife` 里，不需要 pip 安装。
 
    ```bash
-   sudo pacman -S vapoursynth
+   sudo pacman -S vapoursynth python-pytorch-cuda python-numpy python-requests python-tqdm
    ```
 
-3. 安装 vsrife（插帧依赖）。Arch 没有维护对应的包，只能用 pip 装，所以要加 `--break-system-packages`。
-
-   ```bash
-   pip install vsrife --break-system-packages
-   pip cache purge   # 可选，清理下载的 whl 缓存
-   ```
-
-   第一次播放时会自动下载插帧模型（默认 `4.22.lite`），也可以用 `python -m vsrife` 提前下载。
-
-4. 克隆到 mpv 配置目录，同时拉取子模块。
+3. 克隆到 `~/.config/mpv`（`rife.vpy` 按这个路径加载 vsrife），同时拉取子模块。
 
    ```bash
    git clone --recurse-submodules <仓库地址> ~/.config/mpv
@@ -73,13 +65,15 @@
    git submodule update --init
    ```
 
-5. （可选）安装剪贴板工具，Ctrl+V 播放链接用。
+   第一次播放时会自动下载插帧模型（默认 `4.22.lite`）到 `third_party/vs-rife/vsrife/models/`。
+
+4. （可选）安装剪贴板工具，Ctrl+V 播放链接用。
 
    ```bash
    sudo pacman -S wl-clipboard
    ```
 
-6. （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用；biliass 把弹幕 XML 转成 ASS。
+5. （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用；biliass 把弹幕 XML 转成 ASS。
 
    ```bash
    sudo pacman -S yt-dlp
@@ -148,7 +142,7 @@
 
 ## B 站在线播放与弹幕
 
-装好安装第 6 步的依赖后，直接把 B 站链接丢给 mpv 即可，不要复制 m4s 链接。
+装好安装第 5 步的依赖后，直接把 B 站链接丢给 mpv 即可，不要复制 m4s 链接。
 
 ```bash
 mpv "https://www.bilibili.com/video/BVxxxxxxxx"
@@ -207,3 +201,7 @@ script-opts-append=bili-danmaku-duration_marquee=12
 
 - [bloc97/Anime4K](https://github.com/bloc97/Anime4K)（MIT）
 - [Artoriuz/ArtCNN](https://github.com/Artoriuz/ArtCNN)（MIT）
+
+插帧：
+
+- [HolyWu/vs-rife](https://github.com/HolyWu/vs-rife)（MIT）
