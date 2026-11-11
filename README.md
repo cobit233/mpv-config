@@ -24,6 +24,7 @@
 │   ├── upscale.lua          超分开关，启动时挂上默认档
 │   ├── play-clipboard.lua   播放剪贴板里的链接
 │   ├── bili-danmaku.lua     B 站弹幕下载、转换、挂载
+│   ├── idle-screen.lua      空闲界面：渐变背景，自动弹出最近播放
 │   ├── modernz.lua          链接 · 界面脚本
 │   └── menu/                链接 · 右键菜单脚本
 ├── script-opts/
@@ -101,6 +102,14 @@
 | 按键 | 作用 |
 | --- | --- |
 | Ctrl+V | 播放剪贴板（Ctrl+C 复制的内容）里的链接 |
+
+### 最近播放
+
+| 按键 | 作用 |
+| --- | --- |
+| h | 打开最近播放列表（空闲时自动弹出），↑/↓ 选择，Enter 播放，直接输入文字可过滤，Esc 关闭 |
+
+使用 mpv 自带的播放历史（`save-watch-history`），记录在 `~/.local/state/mpv/watch_history.jsonl`。列表最后一项「Clear history」可以清空历史。
 
 ### 常用
 
