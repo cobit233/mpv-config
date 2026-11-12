@@ -1,4 +1,4 @@
-# mpv-config
+<h1 align="center">mpv-config</h1>
 
 个人使用的 mpv 配置，包括超分、插帧、B 站在线播放与弹幕支持。
 
@@ -60,12 +60,6 @@ sudo pacman -S vapoursynth python-pytorch-cuda python-numpy python-requests pyth
 ```bash
 git clone --recurse-submodules <仓库地址> ~/.config/mpv
 git submodule update --init   # 克隆时没带 --recurse-submodules 的话补这一句
-```
-
-- （可选）安装剪贴板工具，Ctrl+V 播放链接用。
-
-```bash
-sudo pacman -S wl-clipboard
 ```
 
 - （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用。

@@ -1,10 +1,7 @@
 local mp = require("mp")
 
 local function play_from_clipboard()
-    -- 获取剪贴板内容
-    local handle = io.popen("wl-paste --no-newline")
-    local content = handle:read("*a")
-    handle:close()
+    local content = mp.get_property("clipboard/text") or ""
 
     -- 去除可能存在的空白字符
     content = content:match("^%s*(.-)%s*$")
