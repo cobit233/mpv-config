@@ -43,10 +43,10 @@
 
 ## 3. 安装
 
-- 安装 mpv。需要 AUR 的 `mpv-git`，官方仓库的 `mpv` 不支持 `vf=vapoursynth=路径` 的写法，插帧会失败。
+- 安装 mpv。
 
 ```bash
-paru -S mpv-git
+sudo pacman -S mpv
 ```
 
 - 安装插帧依赖：VapourSynth 框架，以及 vsrife 需要的 PyTorch（CUDA 版）等 Python 包。
