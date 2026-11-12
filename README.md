@@ -1,4 +1,4 @@
-<h1 align="center">mpv-config</h1>
+# mpv-config
 
 个人使用的 mpv 配置，包括超分、插帧、B 站在线播放与弹幕支持。
 
@@ -46,16 +46,16 @@
 - 安装 mpv。
 
 ```bash
-sudo pacman -S mpv
+sudo pacman -S --needed mpv
 ```
 
 - 安装插帧依赖：VapourSynth 框架，以及 vsrife 需要的 PyTorch（CUDA 版）等 Python 包。
 
 ```bash
-sudo pacman -S vapoursynth python-pytorch-cuda python-numpy python-requests python-tqdm
+sudo pacman -S --needed vapoursynth python-pytorch-cuda python-numpy python-requests python-tqdm
 ```
 
-- 克隆到 `~/.config/mpv`（`rife.vpy` 按这个路径加载 vsrife），同时拉取子模块。第一次播放时会自动下载插帧模型（当前只使用了 `4.22.lite`）。
+- 克隆到 `~/.config/mpv`，同时拉取子模块。第一次播放时会自动下载插帧模型（当前只使用了 `4.22.lite`）。
 
 ```bash
 git clone --recurse-submodules <仓库地址> ~/.config/mpv
@@ -65,13 +65,13 @@ git submodule update --init   # 克隆时没带 --recurse-submodules 的话补�
 - （可选）安装 B 站播放依赖。yt-dlp 解析页面、换回已授权的播放地址，由 mpv 内置的 `ytdl_hook` 自动调用。
 
 ```bash
-sudo pacman -S yt-dlp
+sudo pacman -S --needed yt-dlp
 ```
 
 - （可选）安装biliass，显示 B 站弹幕。
 
 ```bash
-paru -S python-biliass
+paru -S --needed python-biliass
 ```
 
 ## 4. 快捷键
@@ -120,7 +120,7 @@ paru -S python-biliass
 
 ### 5.3. B 站在线播放与弹幕
 
-装好「3. 安装」里的 B 站播放依赖后，直接把 B 站链接丢给 mpv 即可，不要复制 m4s 链接。
+装好 B 站播放依赖后，直接把 B 站链接丢给 mpv 即可。
 
 ```bash
 mpv "https://www.bilibili.com/video/BVxxxxxxxx"
